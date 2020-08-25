@@ -10,17 +10,17 @@
 
 ##### 如何使用
 
-1. 下载最新版:arrow_down:
+1.  :arrow_down: [前往下载最新版](https://github.com/Catkaikai/MySpider/releases)  
 
-2. 按照压缩包里的提示填写`config`目录下的`config.properties`的内容:pencil2:
+2. :pencil2: 按照压缩包里的提示填写`config`目录下的`config.properties`的内容
 
-3. 在本机已`配置Java环境`的情况下，直接在jar包所在目录运行:runner:
+3. :runner:  在本机已`配置Java环境`的情况下，直接在jar包所在目录运行
 
    ```
    java -jar ./myspider.jar
    ```
 
-4. output文件夹下即会生成`output.md`以及`日志`:happy:
+4. :happy:  ​output文件夹下即会生成`output.md`以及`日志`  
 
 ##### 优势
 
