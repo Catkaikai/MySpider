@@ -11,7 +11,7 @@ import us.codecraft.webmagic.pipeline.Pipeline;
 * @Description 类说明 输出到控制台
 */
 public class ConsolePipeline implements Pipeline {
-    @Override
+	@Override
     public void process(ResultItems resultItems, Task task) {
         for (Entry<String, Object> entry : resultItems.getAll().entrySet()) {
             System.out.println(entry.getKey() + ":\t" + entry.getValue());

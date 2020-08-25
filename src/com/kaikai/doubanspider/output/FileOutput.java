@@ -16,7 +16,7 @@ public class FileOutput {
 	private static PrintStream ps;
 	//输出到相对位置
 	static {
-		String path="../config/outputT1.md";
+		String path="output\\output.md";
 		String confPath = System.getProperty("user.dir");
 		confPath = confPath + File.separator + path;
 		File filemd = new File(confPath);

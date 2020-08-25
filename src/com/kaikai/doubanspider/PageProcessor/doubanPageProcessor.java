@@ -1,9 +1,7 @@
 package com.kaikai.doubanspider.PageProcessor;
 
-import com.kaikai.doubanspider.Pipeline.ConsolePipeline;
 import com.kaikai.doubanspider.Pipeline.FileOutputPipeline;
 import com.kaikai.doubanspider.config.propertiesConfig;
-
 import us.codecraft.webmagic.Page;
 import us.codecraft.webmagic.Site;
 import us.codecraft.webmagic.Spider;
@@ -16,6 +14,7 @@ import us.codecraft.webmagic.processor.PageProcessor;
 */
 public class doubanPageProcessor implements PageProcessor {
 
+	private static Spider myspider=null;
 	//当前页面
 	private long index=1;
 	public static final String URL_LIST = "https://www.douban.com/group/gz_rent/discussion\\?start=\\d+";
@@ -23,15 +22,20 @@ public class doubanPageProcessor implements PageProcessor {
     private Site site = Site
             .me()
             .setDomain("www.douban.com")
-            .setSleepTime(3000)
+            .setSleepTime(propertiesConfig.SleepTime)
             .setUserAgent("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_2) AppleWebKit/537.31 (KHTML, like Gecko) Chrome/26.0.1410.65 Safari/537.31");
 
     @Override
     public void process(Page page) {        
         if (page.getUrl().regex(URL_LIST).match()) {
-        	page.addTargetRequests(page.getHtml().links().regex(URL_POST).all());
-        	System.out.println("正在获取第"+ index++ +"页的数据");
-        	page.addTargetRequests(page.getHtml().css(".next").links().all());
+        	if(propertiesConfig.TargetIndex>=index++) {
+        		System.out.println("正在采集第 "+(index-1)+" 页!");
+        		page.addTargetRequests(page.getHtml().links().regex(URL_POST).all());
+            	page.addTargetRequests(page.getHtml().css(".next").links().all());
+        	}else {
+        		myspider.stop();
+        		System.out.println("---采集完成 !---");
+        	}
         } else {
         	page.putField("帖子标题", page.getHtml().css(".article h1","text")); 
         	page.putField("帖子副标题", page.getHtml().css(".tablecc","text")); 
@@ -54,13 +58,12 @@ public class doubanPageProcessor implements PageProcessor {
         return site;
     }
     public static void main(String[] args) {
-        Spider myspider = Spider.create(new doubanPageProcessor());
-        System.out.println(propertiesConfig.GroupCode);
-        myspider.addUrl("https://www.douban.com/group/gz_rent/discussion?start=0")
+        myspider = Spider.create(new doubanPageProcessor());
+        myspider.addUrl("https://www.douban.com/group/"+propertiesConfig.GroupCode+"/discussion?start=0")
 		        //开启5个线程抓取
-		        .thread(5)
+		        .thread(propertiesConfig.ThreadPoolSize)
 		        //添加pipeline
-		        .addPipeline(new ConsolePipeline())
+		        //.addPipeline(new ConsolePipeline())
 		        .addPipeline(new FileOutputPipeline())
 		        //启动爬虫
 		        .run();
